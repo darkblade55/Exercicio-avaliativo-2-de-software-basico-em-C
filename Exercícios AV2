@@ -1,0 +1,328 @@
+1 - #include <stdio.h>
+#include <stdlib.h>
+void bubbleSort(int vetor[], int n) {
+    int x, y, temp;
+    for (x = 0; x < n - 1; x++) {
+        for (y = 0; y < n - x - 1; y++) {
+            if (vetor[y] > vetor[y + 1]) {
+                temp = vetor[y];
+                vetor[y] = vetor[y + 1];
+                vetor[y + 1] = temp;
+            }
+        }
+    }
+}
+
+void insertionSort(int vetor[], int n) {
+    int x, ch, y;
+    for (x = 1; x < n; x++) {
+        ch = vetor[x];
+        y = x - 1;
+        while (y >= 0 && vetor[y] > ch) {
+            vetor[y + 1] = vetor[y];
+            y = y - 1;
+        }
+        vetor[y + 1] = ch;
+    }
+}
+
+void imprimir(int vetor[], int n) {
+    int x;
+    for (x = 0; x < n; x++) {
+        printf("%d ", vetor[x]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int n, x, escolher;
+    
+    printf("Diga o tamanho do vetor: ");
+    scanf("%d", &n);
+    
+    int vetor[n];
+    
+    printf("Insira os numeros do vetor:\n");
+    for (x = 0; x < n; x++) {
+        scanf("%d", &vetor[x]);
+    }
+    
+    printf("Insira a ordem que você deseja:\n");
+    printf("1 para o Bubble Sort\n");
+    printf("2 para o Insertion Sort\n");
+    printf("Opçao: ");
+    scanf("%d", &escolher);
+    
+    switch (escolher) {
+        case 1:
+            bubbleSort(vetor, n);
+            printf("Vetor ordenado com o Bubble Sort: ");
+            imprimir(vetor, n);
+            break;
+        case 2:
+            insertionSort(vetor, n);
+            printf("Vetor ordenado com o Insertion Sort: ");
+            imprimir(vetor, n);
+            break;
+        default:
+            printf("Opcao invalida.\n");
+            break;
+    }
+    
+    return 0;
+}
+
+2- #include <stdio.h>
+#include <stdlib.h>
+
+typedef struct no {
+    int valor;
+    struct no* esquerda;
+    struct no* direita;
+} No;
+
+void empilha(int valor);
+void desempilha();
+void imprimirPilha();
+void limparPilha();
+void imprimirTopoPilha();
+
+
+void enqueue(int valor);
+void dequeue();
+void imprimirFila();
+void limparFila();
+int maiorElementoFila();
+int menorElementoFila();
+
+
+No* inserirElemento(No* raiz, int valor);
+No* buscarElemento(No* raiz, int valor);
+void imprimirArvore(No* raiz);
+void imprimirArvoreInvertida(No* raiz);
+int encontrarMaiorElemento(No* raiz);
+
+
+int main() {
+    int opcao;
+    int valor;
+    No* arvore = NULL;
+
+    do {
+        printf("\n----- MENU -----\n");
+        printf("1. Executar a Pilha\n");
+        printf("2. Executar a Fila\n");
+        printf("3. Executar a Árvore\n");
+        printf("0. Sair\n");
+        printf("Escolha uma opção que você deseja executar: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 0:
+                printf("Encerrando o programa.!\n");
+                break;
+            case 1: {
+                int opcaoPilha;
+
+                do {
+                    printf("\n----- MENU DA PILHA -----\n");
+                    printf("1. Empilhar\n");
+                    printf("2. Desempilhar\n");
+                    printf("3. Imprimir Pilha\n");
+                    printf("4. Limpar Pilha\n");
+                    printf("5. Imprimir Topo da Pilha\n");
+                    printf("0. Voltar ao menu principal\n");
+                    printf("Escolha uma opção: ");
+                    scanf("%d", &opcaoPilha);
+
+                    switch (opcaoPilha) {
+                        case 0:
+                            printf("Menu principal!\n");
+                            break;
+                        case 1:
+                            printf("Insira o valor que será empilhado: ");
+                            scanf("%d", &valor);
+                            empilha(valor);
+                            break;
+                        case 2:
+                            desempilha();
+                            break;
+                        case 3:
+                            imprimirPilha();
+                            break;
+                        case 4:
+                            limparPilha();
+                            break;
+                        case 5:
+                            imprimirTopoPilha();
+                            break;
+                        default:
+                            printf("Opção inválida. Tente mais uma vez.\n");
+                            break;
+                    }
+                } while (opcaoPilha != 0);
+                break;
+            }
+            case 2: {
+                int opcaoFila;
+
+                do {
+                    printf("\n----- MENU DA FILA -----\n");
+                    printf("1. Inserir na Fila\n");
+                    printf("2. Remover da Fila\n");
+                    printf("3. Imprimir Fila\n");
+                    printf("4. Limpar Fila\n");
+                    printf("5. Maior elemento da Fila\n");
+                    printf("6. Menor elemento da Fila\n");
+                    printf("0. Voltar ao menu principal\n");
+                    printf("Escolha uma opção: ");
+                    scanf("%d", &opcaoFila);
+
+                    switch (opcaoFila) {
+                        case 0:
+                            printf("Retornando ao menu principal.\n");
+                            break;
+                        case 1:
+                            printf("Insira um valor a ser inserido na Fila: ");
+                            scanf("%d", &valor);
+                            enqueue(valor);
+                            break;
+                        case 2:
+                            dequeue();
+                            break;
+                        case 3:
+                            imprimirFila();
+                            break;
+                        case 4:
+                            limparFila();
+                            break;
+                        case 5: {
+                            int maior = maiorElementoFila();
+                            if (maior != -1)
+                                printf("O maior elemento da Fila é: %d\n", maior);
+                            break;
+                        }
+                        case 6: {
+                            int menor = menorElementoFila();
+                            if (menor != -1)
+                                printf("O menor elemento da Fila é: %d\n", menor);
+                            break;
+                        }
+                        default:
+                            printf("Opção inválida. Tente mais uma vez.\n");
+                            break;
+                    }
+                } while (opcaoFila != 0);
+                break;
+            }
+            case 3: {
+                int opcaoArvore;
+
+                do {
+                    printf("\n----- MENU DA ÁRVORE -----\n");
+                    printf("1. Inserir elemento na Árvore\n");
+                    printf("2. Buscar elemento na Árvore\n");
+                    printf("3. Imprimir Árvore (pré-ordem)\n");
+                    printf("4. Imprimir Árvore Invertida\n");
+                    printf("5. Maior elemento da Árvore\n");
+                    printf("0. Voltar ao menu principal\n");
+                    printf("Escolha uma opção: ");
+                    scanf("%d", &opcaoArvore);
+
+                    switch (opcaoArvore) {
+                        case 0:
+                            printf("Retornando ao menu principal.\n");
+                            break;
+                        case 1:
+                            printf("Digite o valor a ser inserido na Árvore: ");
+                            scanf("%d", &valor);
+                            arvore = inserirElemento(arvore, valor);
+                            break;
+                        case 2:
+                            printf("Diga o valor a ser buscado na Árvore: ");
+                            scanf("%d", &valor);
+                            No* encontrado = buscarElemento(arvore, valor);
+                            if (encontrado != NULL)
+                                printf("Elemento encontrado na Árvore.\n");
+                            else
+                                printf("O elemento não encontrado na Árvore.\n");
+                            break;
+                        case 3:
+                            printf("Imprimindo Árvore (pré-ordem):\n");
+                            imprimirArvore(arvore);
+                            printf("\n");
+                            break;
+                        case 4:
+                            printf("Imprimindo Árvore Invertida:\n");
+                            imprimirArvoreInvertida(arvore);
+                            printf("\n");
+                            break;
+                        case 5: {
+                            int maior = encontrarMaiorElemento(arvore);
+                            if (maior != -1)
+                                printf("O maior elemento da Árvore é: %d\n", maior);
+                            break;
+                        }
+                        default:
+                            printf("Opção inválida.\n");
+                            break;
+                    }
+                } while (opcaoArvore != 0);
+                break;
+            }
+            default:
+                printf("Opção inválida.\n");
+                break;
+        }
+    } while (opcao != 0);
+
+    return 0;
+}
+
+
+void empilha(int valor) {
+}
+
+void desempilha() {
+}
+
+void imprimirPilha() {
+}
+
+void limparPilha() {
+}
+
+void imprimirTopoPilha() {
+}
+
+void enqueue(int valor) {
+}
+
+void dequeue() {
+}
+
+void imprimirFila() {
+}
+
+void limparFila() {
+}
+
+int maiorElementoFila() {
+}
+
+int menorElementoFila() {
+}
+No* inserirElemento(No* raiz, int valor) {
+}
+
+No* buscarElemento(No* raiz, int valor) {
+}
+
+void imprimirArvore(No* raiz) {
+}
+
+void imprimirArvoreInvertida(No* raiz) {
+}
+
+int encontrarMaiorElemento(No* raiz) {
+}
